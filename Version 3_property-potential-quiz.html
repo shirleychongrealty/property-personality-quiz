@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>What's Your Property Potential?</title>
+  <style>
+    body {
+      font-family: 'Arial', sans-serif;
+      background-color: #FFFBE6;
+      margin: 0;
+      padding: 0;
+      height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      color: #10323B;
+    }
+
+    .quiz-container {
+      max-width: 700px;
+      width: 100%;
+      background: white;
+      padding: 40px;
+      border-radius: 12px;
+      box-shadow: 0 8px 24px rgba(16, 50, 59, 0.1);
+      border: 1px solid #F8CA5E;
+    }
+
+    .cover-page {
+      text-align: center;
+      padding: 20px;
+    }
+
+    .cover-page h1 {
+      font-size: 30px;
+      color: #10323B;
+    }
+
+    .cover-page p {
+      font-size: 18px;
+      color: #10323B;
+    }
+
+    .cover-page button {
+      margin-top: 20px;
+      padding: 14px 30px;
+      background-color: #F8CA5E;
+      border: 2px solid #68BED6;
+      color: #10323B;
+      font-size: 18px;
+      cursor: pointer;
+      border-radius: 8px;
+      transition: all 0.3s ease;
+    }
+
+    .cover-page button:hover {
+      background: #277F98;
+      color: white;
+      border-color: #10323B;
+    }
+
+    .question h2 {
+      font-size: 22px;
+      color: #10323B;
+    }
+
+    .answers button {
+      display: block;
+      margin: 12px 0;
+      padding: 14px;
+      width: 100%;
+      border: 2px solid #68BED6;
+      border-radius: 8px;
+      background: #F8CA5E;
+      color: #10323B;
+      font-weight: bold;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .answers button:hover {
+      background: #277F98;
+      color: white;
+      border-color: #10323B;
+    }
+
+    .result {
+      font-size: 20px;
+      margin-top: 30px;
+      background-color: #68BED6;
+      padding: 20px;
+      border-radius: 10px;
+      color: white;
+      box-shadow: 0 4px 12px rgba(16, 50, 59, 0.2);
+      text-align: center;
+    }
+
+    .result img {
+      width: 150px;
+      margin-top: 20px;
+      border-radius: 10px;
+    }
+  </style>
+</head>
+<body>
+  <div class="quiz-container" id="quiz-container">
+    <!-- Cover Page Section -->
+    <div class="cover-page" id="cover-page">
+      <h1>Guess Your Property Personality</h1>
+      <p>Take this quick quiz to discover your property personality. Whether you're an upgrader, investor, or comfort dweller, let's find out what fits you best!</p>
+      <button onclick="startQuiz()">Start the Quiz</button>
+    </div>
+
+    <!-- Quiz Section (Hidden initially) -->
+    <div id="quiz" style="display: none;">
+      <div class="question" id="question"></div>
+      <div class="answers" id="answers"></div>
+    </div>
+
+    <!-- Result Section (Hidden initially) -->
+    <div class="result" id="result" style="display: none;"></div>
+  </div>
+
+  <script>
+    const questions = [
+      {
+        question: "How long have you owned your current property in Singapore?",
+        answers: ["Less than 5 years", "5–10 years", "Over 10 years"],
+        scores: ["Comfort", "Strategic", "Investor"]
+      },
+      {
+        question: "What’s your top property goal right now?",
+        answers: ["More space for the family", "Better returns on my home", "Just exploring what’s possible"],
+        scores: ["Strategic", "Investor", "Comfort"]
+      },
+      {
+        question: "Do you know how much equity you could unlock from your current flat or condo?",
+        answers: ["Yes, I’ve done the math", "I have a rough idea", "I honestly don’t know"],
+        scores: ["Investor", "Strategic", "Comfort"]
+      }
+    ];
+
+    let currentQuestion = 0;
+    const resultCount = { Comfort: 0, Strategic: 0, Investor: 0 };
+
+    function startQuiz() {
+      // Hide cover page and show quiz
+      document.getElementById('cover-page').style.display = 'none';
+      document.getElementById('quiz').style.display = 'block';
+      showQuestion(currentQuestion);
+    }
+
+    function showQuestion(index) {
+      const q = questions[index];
+      document.getElementById('question').innerHTML = `<h2>${q.question}</h2>`;
+      const answersDiv = document.getElementById('answers');
+      answersDiv.innerHTML = '';
+      q.answers.forEach((answer, i) => {
+        const btn = document.createElement('button');
+        btn.textContent = answer;
+        btn.onclick = () => {
+          resultCount[q.scores[i]]++;
+          currentQuestion++;
+          if (currentQuestion < questions.length) {
+            showQuestion(currentQuestion);
+          } else {
+            showResult();
+          }
+        };
+        answersDiv.appendChild(btn);
+      });
+    }
+
+    function showResult() {
+      const resultType = Object.keys(resultCount).reduce((a, b) => resultCount[a] > resultCount[b] ? a : b);
+      let message = '';
+      let imageUrl = '';
+
+      if (resultType === 'Comfort') {
+        message = "\uD83C\uDFE0 You're a Comfort Dweller – you value stability, but you might be sitting on untapped potential. Let’s explore if your home can do more for your future.";
+        imageUrl = 'https://via.placeholder.com/150/FF5733/FFFFFF?text=Comfort'; // Replace with your image URL
+      } else if (resultType === 'Strategic') {
+        message = "\uD83D\uDCC5 You're a Strategic Upgrader – you’re ready to make a move with the right timeline and guidance. A smart plan is all you need.";
+        imageUrl = 'https://via.placeholder.com/150/33C1FF/FFFFFF?text=Strategic'; // Replace with your image URL
+      } else if (resultType === 'Investor') {
+        message = "\uD83D\uDCB0 You're a Future Investor – you’re focused on ROI, asset growth, and building a strong portfolio. Let’s maximise your next move.";
+        imageUrl = 'https://via.placeholder.com/150/33FF57/FFFFFF?text=Investor'; // Replace with your image URL
+      }
+
+      document.getElementById('quiz').style.display = 'none';
+      document.getElementById('result').innerHTML = `<p>${message}</p><img src="${imageUrl}" alt="${resultType} image">`;
+      document.getElementById('result').style.display = 'block';
+    }
+  </script>
+</body>
+</html>
